@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from "typeorm";
-import { Photo } from "./Photo";
+import { Photo } from "./Photo.entity";
 
 @Entity()
 export class Author {

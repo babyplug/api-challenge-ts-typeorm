@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
-import { Photo } from "./Photo";
+import { Photo } from "./Photo.entity";
 
 @Entity()
 export class PhotoMetadata {
