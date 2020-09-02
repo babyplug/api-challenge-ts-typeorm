@@ -3,7 +3,7 @@ import { PhotoMetadataRepository } from "../repository/PhotoMetadata.repository"
 import { Request, Response } from "express";
 import { PhotoMetadata } from "../entity/PhotoMetadata.entity";
 import PhotoMetadataDTO from "../dto/PhotoMetadata.dto";
-import { NotFoundException } from "../error/NotFoundException.error";
+import { CustomError } from "../error/CustomError.error";
 
 export default class PhotoService {
     public photoMetadataRepository: PhotoMetadataRepository
@@ -31,7 +31,7 @@ export default class PhotoService {
     public async getById(photoId: number): Promise<PhotoMetadata> {
         const photo: PhotoMetadata = await this.photoMetadataRepository.findOne(photoId)
         if (!photo) {
-            throw new NotFoundException('Can not find photo metadata by this id')
+            throw new CustomError({statusCode: 404, message: 'Can not find photo metadata by this id'})
         }
         return photo
     }

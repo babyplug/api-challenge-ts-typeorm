@@ -5,7 +5,7 @@ import IControllerBase from "../interfaces/IControllerBase.interface"
 import { User } from "../entity/User.entity"
 import UserService from "../service/User.service"
 import UserDTO from "../dto/User.dto"
-import { NotFoundException } from "../error/NotFoundException.error"
+import { CustomError } from "../error/CustomError.error"
 
 export default class UserController implements IControllerBase {
     public path = '/user'
@@ -52,8 +52,11 @@ export default class UserController implements IControllerBase {
         try {
             const user = await this.userService.getById(userId)
             return res.json(user)
-        } catch (error) {
-            return res.status(404).json({message: error.message})
+        } catch (e) {
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
         }
     }
 
@@ -63,8 +66,11 @@ export default class UserController implements IControllerBase {
         try {
             const user = await this.userService.updateById(userId, form)
             return res.json(user)
-        } catch (error) {
-            return res.status(404).json({message: error.message})
+        } catch (e) {
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
         }
     }
 
@@ -74,9 +80,10 @@ export default class UserController implements IControllerBase {
             await this.userService.deleteById(userId)
             return res.json({status: 'success'})
         } catch (e) {
-            if (e instanceof NotFoundException) {
-                return res.status(404).json({message: e.message})
-            } return res.status(500).json({message: 'Server error please contact admin !'})
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
         }
     }
 }

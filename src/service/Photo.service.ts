@@ -3,7 +3,7 @@ import { PhotoRepository } from "../repository/PhotoRepository"
 import { Request, Response } from "express";
 import { Photo } from "../entity/Photo.entity";
 import PhotoDTO from "../dto/Photo.dto";
-import { NotFoundException } from "../error/NotFoundException.error";
+import { CustomError } from "../error/CustomError.error";
 
 export default class PhotoService {
     public photoRepository: PhotoRepository
@@ -32,7 +32,7 @@ export default class PhotoService {
     public async getById(photoId: number): Promise<Photo> {
         const photo: Photo = await this.photoRepository.findOne(photoId)
         if (!photo) {
-            throw new NotFoundException('Can not find photo by this id')
+            throw new CustomError({statusCode: 404, message: 'Can not find photo by this id'})
         }
         return photo
     }

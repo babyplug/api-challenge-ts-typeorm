@@ -5,7 +5,7 @@ import IControllerBase from "../interfaces/IControllerBase.interface"
 import { Album } from "../entity/Album.entity"
 import AlbumService from "../service/Album.service"
 import AlbumDTO from "../dto/Album.dto"
-import { NotFoundException } from "../error/NotFoundException.error"
+import { CustomError } from "../error/CustomError.error"
 
 export default class AlbumController implements IControllerBase {
     public path = '/album'
@@ -53,10 +53,10 @@ export default class AlbumController implements IControllerBase {
             const album = await this.albumService.getAuthorById(authorId)
             return res.json(album)
         } catch (e) {
-            if (e instanceof NotFoundException) {
-                return res.status(404).json({message: e.message})
-            } 
-            return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
         }
     }
 
@@ -67,9 +67,10 @@ export default class AlbumController implements IControllerBase {
             const album = await this.albumService.updateAuthorById(authorId, form)
             return res.json(album)
         } catch (e) {
-            if (e instanceof NotFoundException) {
-                return res.status(404).json({message: e.message})
-            } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
         }
     }
 
@@ -79,9 +80,10 @@ export default class AlbumController implements IControllerBase {
             await this.albumService.deleteAuthorById(authorId)
             return res.json({status: 'success'})
         } catch (e) {
-            if (e instanceof NotFoundException) {
-                return res.status(404).json({message: e.message})
-            } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
         }
     }
 }

@@ -3,7 +3,7 @@ import { UserRepository } from "../repository/UserRepository"
 import { Request, Response } from "express";
 import { User } from "../entity/User.entity";
 import UserDTO from "../dto/User.dto";
-import { NotFoundException } from "../error/NotFoundException.error";
+import { CustomError } from "../error/CustomError.error";
 
 export default class UserService {
     public userRepository: UserRepository
@@ -29,7 +29,7 @@ export default class UserService {
     public async getById(userId: number): Promise<User> {
         const user: User = await this.userRepository.findOne(userId)
         if (!user) {
-            throw new NotFoundException('Can not find user by this id')
+            throw new CustomError({statusCode: 404, message: 'Can not find user by this id'})
         }
         return user
     }

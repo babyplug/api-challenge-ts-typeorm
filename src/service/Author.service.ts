@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm"
-import { NotFoundException } from "../error/NotFoundException.error";
+import { CustomError } from "../error/CustomError.error";
 import { AuthorRepository } from "../repository/Author.repository";
 import { Author } from "../entity/Author.entity";
 import AuthorDTO from "../dto/Author.dto";
@@ -27,7 +27,7 @@ export default class AuthorService {
     public async getAuthorById(authorId: number): Promise<Author> {
         const author: Author = await this.authorRepository.findOne(authorId)
         if (!author) {
-            throw new NotFoundException('Can not find author by this id')
+            throw new CustomError({statusCode: 404, message: 'Can not find author by this id'})
         }
         return author
     }

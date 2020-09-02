@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm"
-import { NotFoundException } from "../error/NotFoundException.error";
+import { CustomError } from "../error/CustomError.error";
 import { AlbumRepository } from "../repository/Album.repository";
 import { Album } from "../entity/Album.entity";
 import AlbumDTO from "../dto/Album.dto";
@@ -27,7 +27,7 @@ export default class AlbumService {
     public async getAuthorById(authorId: number): Promise<Album> {
         const album: Album = await this.albumRepository.findOne(authorId)
         if (!album) {
-            throw new NotFoundException('Can not find album by this id')
+            throw new CustomError({statusCode: 404, message: 'Can not find album by this id'})
         }
         return album
     }

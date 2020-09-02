@@ -5,7 +5,7 @@ import IControllerBase from "../interfaces/IControllerBase.interface"
 import { Author } from "../entity/Author.entity"
 import AuthorService from "../service/Author.service"
 import AuthorDTO from "../dto/Author.dto"
-import { NotFoundException } from "../error/NotFoundException.error"
+import { CustomError } from "../error/CustomError.error"
 
 export default class AuthorController implements IControllerBase {
     public path = '/author'
@@ -53,10 +53,10 @@ export default class AuthorController implements IControllerBase {
             const author = await this.authorService.getAuthorById(authorId)
             return res.json(author)
         } catch (e) {
-            if (e instanceof NotFoundException) {
-                return res.status(404).json({message: e.message})
-            } 
-            return res.status(500).json({message: 'Server error please contact admin !'})
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
         }
     }
 
@@ -67,9 +67,10 @@ export default class AuthorController implements IControllerBase {
             const author = await this.authorService.updateAuthorById(authorId, form)
             return res.json(author)
         } catch (e) {
-            if (e instanceof NotFoundException) {
-                return res.status(404).json({message: e.message})
-            } return res.status(500).json({message: 'Server error please contact admin !'})
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
         }
     }
 
@@ -79,9 +80,10 @@ export default class AuthorController implements IControllerBase {
             await this.authorService.deleteAuthorById(authorId)
             return res.json({status: 'success'})
         } catch (e) {
-            if (e instanceof NotFoundException) {
-                return res.status(404).json({message: e.message})
-            } return res.status(500).json({message: 'Server error please contact admin !'})
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
         }
     }
 }
