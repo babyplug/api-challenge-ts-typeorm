@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Photo } from "./Photo.entity";
 
 @Entity()
@@ -10,6 +10,6 @@ export class Author {
     @Column()
     name: string;
 
-    @OneToMany(type => Photo, photo => photo.author) // note: we will create author property in the Photo class below
+    @OneToMany(type => Photo, photo => photo.author)
     photos: Photo[];
 }
