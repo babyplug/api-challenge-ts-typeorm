@@ -19,6 +19,7 @@ import loggerMiddleware from "./middleware/logger.middleware";
 import PhotoController from "./controller/Photo.controller";
 import PhotoMetadataController from "./controller/PhotoMetadata.controller";
 import AuthorController from "./controller/Author.controller";
+import AlbumController from "./controller/Album.controller";
 
 createConnection().then(async connection => {
 
@@ -30,6 +31,7 @@ createConnection().then(async connection => {
             new PhotoController(),
             new PhotoMetadataController(),
             new AuthorController(),
+            new AlbumController(),
         ],
         middleWares: [
             bodyParser.json(),
