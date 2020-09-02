@@ -35,43 +35,47 @@ export default class PhotoController implements IControllerBase {
     }
 
     getAll = async (req: Request, res: Response) => {
-        const users: Photo[] = await this.photoService.getAllPhoto(req, res)
+        const photo: Photo[] = await this.photoService.getAllPhoto(req, res)
         return res.json({
-            data: users
+            data: photo
         })
     }
 
     create = async (req: Request, res: Response) => {
         const form: PhotoDTO = req.body
-        const user = await this.photoService.createPhoto(form)
-        return res.json(user)
+        const photo = await this.photoService.createPhoto(form)
+        return res.json(photo)
     }
 
     getById = async (req: Request, res: Response) => {
-        const userId: number = Number(req.params.id)
+        const photoId: number = Number(req.params.id)
         try {
-            const user = await this.photoService.getById(userId)
-            return res.json(user)
-        } catch (error) {
-            return res.status(404).json({message: error.message})
+            const photo = await this.photoService.getById(photoId)
+            return res.json(photo)
+        } catch (e) {
+            if (e instanceof NotFoundException) {
+                return res.status(404).json({message: e.message})
+            } return res.status(500).json({message: 'Server error please contact admin !'})
         }
     }
 
     updateById = async (req: Request, res: Response) => {
-        const userId: number = Number(req.params.id)
+        const photoId: number = Number(req.params.id)
         const form: PhotoDTO = req.body
         try {
-            const user = await this.photoService.updateById(userId, form)
-            return res.json(user)
-        } catch (error) {
-            return res.status(404).json({message: error.message})
+            const photo = await this.photoService.updateById(photoId, form)
+            return res.json(photo)
+        } catch (e) {
+            if (e instanceof NotFoundException) {
+                return res.status(404).json({message: e.message})
+            } return res.status(500).json({message: 'Server error please contact admin !'})
         }
     }
 
     deleteById = async (req: Request, res: Response) => {
-        const userId: number = Number(req.params.id)
+        const photoId: number = Number(req.params.id)
         try {
-            await this.photoService.deleteById(userId)
+            await this.photoService.deleteById(photoId)
             return res.json({status: 'success'})
         } catch (e) {
             if (e instanceof NotFoundException) {
