@@ -16,6 +16,7 @@ import * as express from "express"
 import HomeController from "./controller/Home.controller";
 import UserController from "./controller/User.controller";
 import loggerMiddleware from "./middleware/logger.middleware";
+import PhotoController from "./controller/Photo.controller";
 
 createConnection().then(async connection => {
 
@@ -24,6 +25,7 @@ createConnection().then(async connection => {
         controllers: [
             new HomeController(),
             new UserController(),
+            new PhotoController(),
         ],
         middleWares: [
             bodyParser.json(),

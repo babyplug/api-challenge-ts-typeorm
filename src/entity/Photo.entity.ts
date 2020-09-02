@@ -2,9 +2,10 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToOne, ManyToMany
 import { PhotoMetadata } from "./PhotoMetadata.entity";
 import { Author } from "./Author.entity";
 import { Album } from "./Album.entity";
+import { BaseEntity } from "./BaseEntity.entity";
 
 @Entity()
-export class Photo {
+export class Photo extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
