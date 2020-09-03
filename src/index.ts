@@ -1,18 +1,10 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-// import { User } from "./entity/User";
-// import { Photo } from "./entity/Photo";
-// import { PhotoMetadata } from "./entity/PhotoMetadata";
-// import { Album } from "./entity/Album";
-// import { Request, Response } from "express";
-// import * as express from "express";
-// import * as bodyParser from "body-parser";
-// import { AppRoutes } from "./routes";
-// import userRouter from "./controller/User.controller";
 
 import App from './app'
 import * as bodyParser from "body-parser"
 import * as express from "express"
+import cors from "cors";
 import HomeController from "./controller/Home.controller";
 import UserController from "./controller/User.controller";
 import loggerMiddleware from "./middleware/logger.middleware";
@@ -37,6 +29,7 @@ createConnection().then(async connection => {
             bodyParser.json(),
             express.json(),
             loggerMiddleware,
+            cors(),
         ],
     })
 
