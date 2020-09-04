@@ -22,7 +22,8 @@ export class User extends BaseEntity {
     username: string
 
     @Column({
-        length: 100
+        length: 100,
+        select: false
     })
     password: string
 }
