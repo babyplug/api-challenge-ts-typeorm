@@ -6,11 +6,13 @@ import { Author } from "../entity/Author.entity"
 import AuthorService from "../service/Author.service"
 import AuthorDTO from "../dto/Author.dto"
 import { CustomError } from "../error/CustomError.error"
+import AuthSecurity from "../security/Auth.security"
 
 export default class AuthorController implements IControllerBase {
     public path = '/author'
     public router = express.Router()
     private authorService: AuthorService
+    private authSecurity: AuthSecurity = new AuthSecurity()
     
     constructor() {
         this.initRoutes()
@@ -24,7 +26,7 @@ export default class AuthorController implements IControllerBase {
     initRoutes() {
         this.router
             .route('')
-            .get(this.getAll)
+            .get( this.authSecurity.authen, this.getAll)
             .post(this.create)
 
         this.router

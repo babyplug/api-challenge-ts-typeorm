@@ -6,7 +6,7 @@ import UserDTO from "../dto/User.dto";
 import { CustomError } from "../error/CustomError.error";
 
 export default class UserService {
-    public userRepository: UserRepository
+    private userRepository: UserRepository
 
     constructor() {
         this.userRepository = getCustomRepository(UserRepository)

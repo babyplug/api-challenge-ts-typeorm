@@ -2,9 +2,9 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 
 import App from './app'
-import * as bodyParser from "body-parser"
-import * as express from "express"
-import cors from "cors";
+import * as bodyParser from "body-parser";
+import * as express from "express";
+import * as cors from "cors";
 import HomeController from "./controller/Home.controller";
 import UserController from "./controller/User.controller";
 import loggerMiddleware from "./middleware/logger.middleware";
@@ -12,6 +12,8 @@ import PhotoController from "./controller/Photo.controller";
 import PhotoMetadataController from "./controller/PhotoMetadata.controller";
 import AuthorController from "./controller/Author.controller";
 import AlbumController from "./controller/Album.controller";
+import AuthController from "./controller/Auth.controller";
+import * as passport from "passport";
 
 createConnection().then(async connection => {
 
@@ -19,6 +21,7 @@ createConnection().then(async connection => {
         port: 3000,
         controllers: [
             new HomeController(),
+            new AuthController(),
             new UserController(),
             new PhotoController(),
             new PhotoMetadataController(),
@@ -30,6 +33,8 @@ createConnection().then(async connection => {
             express.json(),
             loggerMiddleware,
             cors(),
+            passport.initialize(),
+            passport.session(),
         ],
     })
 

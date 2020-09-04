@@ -16,4 +16,13 @@ export class User extends BaseEntity {
     @Column()
     age: number;
 
+    @Column({
+        length: 50
+    })
+    username: string
+
+    @Column({
+        length: 100
+    })
+    password: string
 }
