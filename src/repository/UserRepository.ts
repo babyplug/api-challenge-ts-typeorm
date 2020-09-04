@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from "typeorm";
+import { EntityRepository, Repository, getRepository } from "typeorm";
 import { User } from "../entity/User.entity";
 
 @EntityRepository(User)
@@ -9,12 +9,16 @@ export class UserRepository extends Repository<User> {
     }
 
     findByUsername(username: string): Promise<User[]> {
-        return this.find({ 
-            where: { username },
-            order: {
-                createDate: "DESC",
-            }
-         });
+        return this.createQueryBuilder("user")
+                .addSelect("user.password")
+                .where("username = :username", { username })
+                .orderBy("createDate", "DESC")
+                .getMany()
+        // return this.createQueryBuilder()
+        //     .addSelect('user.password')
+        //     .where("username = :username", { username })
+        //     .orderBy("createDate", "DESC")
+        //     .getMany()
     }
 
 }
