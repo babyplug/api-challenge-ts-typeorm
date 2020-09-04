@@ -7,6 +7,9 @@ import { CustomError } from "../error/CustomError.error";
 import RegisterDTO from "../dto/Register.dto";
 import * as bcrypt from "bcryptjs";
 import { CONFIG } from "../security/Config.security";
+import { CredentialDTO } from "../dto/Credential.dto";
+import * as jwt from "jsonwebtoken";
+import { TokenResponseDTO } from "../dto/TokenResponse.dto";
 
 export default class UserService {
     private userRepository: UserRepository
@@ -16,7 +19,7 @@ export default class UserService {
     }
 
     public async getAllUsers(req: Request, res: Response): Promise<User[]> {
-        return await this.userRepository.find({deleted: false});
+        return await this.userRepository.find({ deleted: false });
     }
 
     public async createUser(form: UserDTO): Promise<User> {
@@ -32,7 +35,7 @@ export default class UserService {
     public async getById(userId: number): Promise<User> {
         const user: User = await this.userRepository.findOne(userId)
         if (!user) {
-            throw new CustomError({statusCode: 404, message: 'Can not find user by this id'})
+            throw new CustomError({ statusCode: 404, message: 'Can not find user by this id' })
         }
         return user
     }
@@ -65,5 +68,28 @@ export default class UserService {
         dto.password = hashPassword
 
         await this.userRepository.save(dto)
+    }
+
+    public async login(credentials: CredentialDTO): Promise<TokenResponseDTO> {
+        if (!credentials) {
+            return null
+        }
+
+        const users: User[] = await this.userRepository.findByUsername(credentials.username)
+        if (!users || users.length <= 0) {
+            return null
+        }
+
+        const user = users[0]
+        if (!await bcrypt.compare(credentials.password, user.password)) {
+            return null
+        }
+
+        const token: string = jwt.sign( { id: user.id, username: user.username },
+            CONFIG.SECRET,
+            { expiresIn: "1d" }
+        )
+        const response: TokenResponseDTO = { prefix: CONFIG.PREFIX, token: token }
+        return response
     }
 }

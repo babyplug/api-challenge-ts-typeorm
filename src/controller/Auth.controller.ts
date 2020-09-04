@@ -3,6 +3,8 @@ import { Request, Response } from 'express'
 import IControllerBase from '../interfaces/IControllerBase.interface'
 import UserService from '../service/User.service'
 import RegisterDTO from '../dto/Register.dto'
+import { CredentialDTO } from '../dto/Credential.dto'
+import { TokenResponseDTO } from '../dto/TokenResponse.dto'
 
 export default class AuthController implements IControllerBase {
     public path = '/auth'
@@ -29,12 +31,18 @@ export default class AuthController implements IControllerBase {
             .post(this.register)
     }
 
-    index = (req: Request, res: Response) => {
+    index = (_: Request, res: Response) => {
         res.send('api challenge typeorm -- auth')
     }
 
     login = async (req: Request, res: Response) => {
-        res.send('api challenge typeorm -- login')
+        const credentials: CredentialDTO = req.body
+        const response: TokenResponseDTO = await this.userService.login(credentials)
+        if (!response) { 
+            return res.status(401).json({
+                message: "Username or password not correct !"
+            })
+        } return res.json(response)
     }
 
     register = async (req: Request, res: Response) => {

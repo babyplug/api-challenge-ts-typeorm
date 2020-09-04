@@ -8,4 +8,13 @@ export class UserRepository extends Repository<User> {
         return this.findOne({ firstName, lastName });
     }
 
+    findByUsername(username: string): Promise<User[]> {
+        return this.find({ 
+            where: { username },
+            order: {
+                createDate: "DESC",
+            }
+         });
+    }
+
 }
