@@ -4,6 +4,9 @@ import { Request, Response } from "express";
 import { User } from "../entity/User.entity";
 import UserDTO from "../dto/User.dto";
 import { CustomError } from "../error/CustomError.error";
+import RegisterDTO from "../dto/Register.dto";
+import * as bcrypt from "bcryptjs";
+import { CONFIG } from "../security/Config.security";
 
 export default class UserService {
     private userRepository: UserRepository
@@ -46,6 +49,21 @@ export default class UserService {
     public async deleteById(userId: number): Promise<void> {
         const dto: User = await this.getById(userId)
         dto.deleted = true
+        await this.userRepository.save(dto)
+    }
+
+    public async register(form: RegisterDTO): Promise<void> {
+        let dto = await this.userRepository.create()
+        dto.deleted = false
+
+        dto.firstName = form.firstName
+        dto.lastName = form.lastName
+        dto.age = form.age
+        dto.username = form.username
+
+        const hashPassword = await bcrypt.hash(form.password, CONFIG.SALT)
+        dto.password = hashPassword
+
         await this.userRepository.save(dto)
     }
 }
