@@ -43,8 +43,15 @@ export default class PhotoController implements IControllerBase {
 
     create = async (req: Request, res: Response) => {
         const form: PhotoDTO = req.body
-        const photo = await this.photoService.createPhoto(form)
-        return res.json(photo)
+        try {
+            const photo = await this.photoService.createPhoto(form)
+            return res.json(photo)
+        } catch (e) {
+            // if (e instanceof CustomError) {
+            //     return res.status(404).json({message: e.message})
+            // } return res.status(500).json({message: 'Server error please contact admin !'})
+            return res.status(e.statusCode || 500).json({message: e.message})
+        }
     }
 
     getById = async (req: Request, res: Response) => {

@@ -4,12 +4,16 @@ import { Request, Response } from "express";
 import { Photo } from "../entity/Photo.entity";
 import PhotoDTO from "../dto/Photo.dto";
 import { CustomError } from "../error/CustomError.error";
+import AuthorService from "./Author.service";
+import { Author } from "../entity/Author.entity";
 
 export default class PhotoService {
-    public photoRepository: PhotoRepository
+    private photoRepository: PhotoRepository
+    private authorService: AuthorService
 
     constructor() {
         this.photoRepository = getCustomRepository(PhotoRepository)
+        this.authorService = new AuthorService()
     }
 
     public async getAllPhoto(req: Request, res: Response): Promise<Photo[]> {
@@ -25,6 +29,9 @@ export default class PhotoService {
         dto.filename = form.filename
         dto.views = form.views
         dto.isPublished = form.isPublished
+        
+        const author: Author = await this.authorService.getAuthorById(form.authorId)
+        dto.author = author
 
         return await this.photoRepository.save(dto)
     }
@@ -44,6 +51,11 @@ export default class PhotoService {
         dto.filename = form.filename
         dto.views = form.views
         dto.isPublished = form.isPublished
+
+        if (!dto.authorId && !form.authorId && dto.authorId !== form.authorId) {
+            const author: Author = await this.authorService.getAuthorById(form.authorId)
+            dto.author = author
+        }
 
         return await this.photoRepository.save(dto)
     }
