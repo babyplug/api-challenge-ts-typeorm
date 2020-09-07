@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToOne, ManyToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToOne, ManyToMany, JoinColumn } from "typeorm";
 import { PhotoMetadata } from "./PhotoMetadata.entity";
 import { Author } from "./Author.entity";
 import { Album } from "./Album.entity";
 import { BaseEntity } from "./BaseEntity.entity";
 
 @Entity()
-export class Photo extends BaseEntity {
+export class Photo {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -31,7 +31,13 @@ export class Photo extends BaseEntity {
     })
     metadata: PhotoMetadata;
 
-    @ManyToOne(type => Author, author => author.photos)
+    @Column()
+    authorId: number;
+
+    @ManyToOne(type => Author, author => author.photos, {
+        eager: true,
+    })
+    @JoinColumn()
     author: Author;
 
     @ManyToMany(type => Album, album => album.photos)

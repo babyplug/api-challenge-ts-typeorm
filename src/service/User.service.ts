@@ -19,12 +19,12 @@ export default class UserService {
     }
 
     public async getAllUsers(req: Request, res: Response): Promise<User[]> {
-        return await this.userRepository.find({ deleted: false });
+        return await this.userRepository.find({ });
     }
 
     public async createUser(form: UserDTO): Promise<User> {
         let dto = await this.userRepository.create()
-        dto.deleted = false
+        // dto.deleted = false
         dto.firstName = form.firstName
         dto.lastName = form.lastName
         dto.age = form.age
@@ -51,13 +51,13 @@ export default class UserService {
 
     public async deleteById(userId: number): Promise<void> {
         const dto: User = await this.getById(userId)
-        dto.deleted = true
+        // dto.deleted = true
         await this.userRepository.save(dto)
     }
 
     public async register(form: RegisterDTO): Promise<void> {
         let dto = await this.userRepository.create()
-        dto.deleted = false
+        // dto.deleted = false
 
         dto.firstName = form.firstName
         dto.lastName = form.lastName

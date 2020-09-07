@@ -13,12 +13,12 @@ export default class PhotoService {
     }
 
     public async getAllPhoto(req: Request, res: Response): Promise<Photo[]> {
-        return await this.photoRepository.find({deleted: false});
+        return await this.photoRepository.find({});
     }
 
     public async createPhoto(form: PhotoDTO): Promise<Photo> {
         let dto = await this.photoRepository.create()
-        dto.deleted = false
+        // dto.deleted = false
 
         dto.name = form.name
         dto.description = form.description
@@ -50,7 +50,7 @@ export default class PhotoService {
 
     public async deleteById(photoId: number): Promise<void> {
         const dto: Photo = await this.getById(photoId)
-        dto.deleted = true
+        // dto.deleted = true
         await this.photoRepository.save(dto)
     }
 }
