@@ -4,12 +4,16 @@ import { Request, Response } from "express";
 import { PhotoMetadata } from "../entity/PhotoMetadata.entity";
 import PhotoMetadataDTO from "../dto/PhotoMetadata.dto";
 import { CustomError } from "../error/CustomError.error";
+import { Photo } from "../entity/Photo.entity";
+import PhotoService from "./Photo.service";
 
-export default class PhotoService {
+export default class PhotoMetadataService {
     public photoMetadataRepository: PhotoMetadataRepository
+    public photoService: PhotoService
 
     constructor() {
         this.photoMetadataRepository = getCustomRepository(PhotoMetadataRepository)
+        this.photoService = new PhotoService()
     }
 
     public async getAllPhotoMetadata(req: Request, res: Response): Promise<PhotoMetadata[]> {
@@ -23,7 +27,12 @@ export default class PhotoService {
         dto.orientation = form.orientation
         dto.compressed = form.compressed
         dto.comment = form.comment
-        dto.photoId = form.photoId
+
+        if (!form.photoId) {
+            const photo: Photo = await this.photoService.getById(form.photoId)
+            dto.photo = photo
+            // dto.photoId = form.photoId
+        }
 
         return await this.photoMetadataRepository.save(dto)
     }
@@ -44,6 +53,11 @@ export default class PhotoService {
         dto.compressed = form.compressed
         dto.comment = form.comment
         dto.photoId = form.photoId
+
+        if (!dto.photoId && !form.photoId && dto.photoId !== form.photoId) {
+            const photo: Photo = await this.photoService.getById(form.photoId)
+            dto.photo = photo
+        }
 
         return await this.photoMetadataRepository.save(dto)
     }

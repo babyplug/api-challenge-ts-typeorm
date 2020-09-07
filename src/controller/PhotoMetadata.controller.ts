@@ -43,8 +43,12 @@ export default class PhotoMetadataController implements IControllerBase {
 
     create = async (req: Request, res: Response) => {
         const form: PhotoMetadataDTO = req.body
-        const photoMetadata = await this.photoMetadataService.createPhotoMetadata(form)
-        return res.json(photoMetadata)
+        try {
+            const photoMetadata = await this.photoMetadataService.createPhotoMetadata(form)
+            return res.json(photoMetadata)
+        } catch (e) {
+            return res.status(e.statusCode || 500).json({message: e.message})
+        }
     }
 
     getById = async (req: Request, res: Response) => {
