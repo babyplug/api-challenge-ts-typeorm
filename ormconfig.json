@@ -4,7 +4,7 @@
    "port": 3306,
    "username": "root",
    "password": "",
-   "database": "api_challenge_node",
+   "database": "api_challenge_typeorm",
    "synchronize": true,
    "logging": false,
    "entities": [
